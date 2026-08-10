@@ -5,6 +5,10 @@
             "path": "../",
         },
         {
+            "name": "# Client",
+            "path": "../apps/client",
+        },
+        {
             "name": "+ Nuxt Base",
             "path": "../packages/nuxt-base",
         },

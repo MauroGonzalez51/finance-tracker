@@ -1,4 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
+import { createResolver } from "nuxt/kit";
+
+const { resolve } = createResolver(import.meta.url);
 
 export default defineNuxtConfig({
     compatibilityDate: "2025-07-15",
@@ -14,7 +17,7 @@ export default defineNuxtConfig({
     ///////////////////////////////////////////////////////
     // VITE
     ///////////////////////////////////////////////////////
-    css: ["~/assets/css/tailwind.css", "~/assets/css/ionic.css"],
+    css: [resolve("./app/assets/css/tailwind.css"), resolve("./app/assets/css/ionic.css")],
     vite: {
         plugins: [tailwindcss()],
         server: {
@@ -31,9 +34,9 @@ export default defineNuxtConfig({
     ///////////////////////////////////////////////////////
     imports: {
         dirs: [
-            "~/composables/**/!(*test|*.spec).{ts,js,mjs,mts}",
-            "~/utils/**/!(*test|*.spec).{ts,js,mjs,mts}",
-            "~~/shared/utils/**/!(*test|*.spec).{ts,js,mjs,mts}",
+            resolve("./app/composables/**/!(*test|*.spec).{ts,js,mjs,mts}"),
+            resolve("./app/utils/**/!(*test|*.spec).{ts,js,mjs,mts}"),
+            resolve("./shared/utils/**/!(*test|*.spec).{ts,js,mjs,mts}"),
         ],
     },
 

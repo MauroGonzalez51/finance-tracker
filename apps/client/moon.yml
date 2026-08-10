@@ -1,6 +1,6 @@
 project:
-    title: Nuxt Base
-    description: Nuxt Layer that handles all basic configuration
+    title: Tauri Client
+    description: (Native) Client using Tauri
 
 layer: application
 
@@ -21,4 +21,4 @@ tasks:
     pnpm:
         args:
             - --filter
-            - "@finance-tracker/packages-nuxt-base"
+            - "@finance-tracker/apps-client"

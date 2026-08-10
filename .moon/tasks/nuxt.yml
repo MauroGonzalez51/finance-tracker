@@ -1,0 +1,37 @@
+inheritedBy:
+    toolchain: node
+    files:
+        - nuxt.config.ts
+
+fileGroups:
+    nuxt_sources:
+        - app/**/*
+          - i18n/**/*
+          - public/**/*
+          - server/**/*
+          - shared/**/*
+          - nuxt.config.ts
+          - package.json
+          - tsconfig.json
+
+tasks:
+    nuxt:
+        command: pnpm
+        args:
+            - exec
+            - nuxt
+        preset: server
+        options:
+            cache: false
+            interactive: true
+
+    build:
+        command: pnpm
+        args:
+            - exec
+            - nuxt
+            - build
+        inputs:
+            - "@group(nuxt_sources)"
+        outputs:
+            - .output

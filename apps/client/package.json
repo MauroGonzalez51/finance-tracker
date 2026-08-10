@@ -1,0 +1,27 @@
+{
+    "name": "@finance-tracker/apps-client",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare",
+        "tauri": "tauri"
+    },
+    "dependencies": {
+        "@nuxt/eslint": "1.17.0",
+        "@nuxtjs/ionic": "1.0.2",
+        "nuxt": "^4.5.2",
+        "vue": "^3.5.41",
+        "vue-router": "^5.2.0"
+    },
+    "devDependencies": {
+        "@finance-tracker/tools-eslint": "workspace:*",
+        "@tauri-apps/cli": "^2.11.4",
+        "eslint": "^10.8.1",
+        "tailwindcss": "^4.3.3",
+        "typescript": "6.0.3"
+    }
+}
