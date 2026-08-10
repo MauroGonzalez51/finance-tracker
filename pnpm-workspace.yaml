@@ -1,0 +1,19 @@
+preferSymlinkedExecutables: true
+shellEmulator: true
+trustPolicy: no-downgrade
+linkWorkspacePackages: true
+injectWorkspacePackages: true
+
+trustPolicyExclude:
+    - chokidar@4.0.3
+
+packages:
+    - apps/**/*
+    - packages/**/*
+    - tools/**/*
+
+allowBuilds:
+    esbuild: true
+
+overrides:
+    typescript: 6.0.3

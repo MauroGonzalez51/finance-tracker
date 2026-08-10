@@ -1,0 +1,99 @@
+{
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit",
+            "source.sort.json": "explicit"
+        },
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+        "source.organizeImports": "explicit",
+        "source.sort.json": "explicit"
+    },
+    "eslint.format.enable": true,
+    "eslint.rules.customizations": [
+        {
+            "fixable": true,
+            "rule": "style/*",
+            "severity": "off"
+        },
+        {
+            "fixable": true,
+            "rule": "format/*",
+            "severity": "off"
+        },
+        {
+            "fixable": true,
+            "rule": "*-indent",
+            "severity": "off"
+        },
+        {
+            "fixable": true,
+            "rule": "*-spacing",
+            "severity": "off"
+        },
+        {
+            "fixable": true,
+            "rule": "*-spaces",
+            "severity": "off"
+        },
+        {
+            "fixable": true,
+            "rule": "*-order",
+            "severity": "off"
+        },
+        {
+            "fixable": true,
+            "rule": "*-dangle",
+            "severity": "off"
+        },
+        {
+            "fixable": true,
+            "rule": "*-newline",
+            "severity": "off"
+        },
+        {
+            "fixable": true,
+            "rule": "*quotes",
+            "severity": "off"
+        },
+        {
+            "fixable": true,
+            "rule": "*semi",
+            "severity": "off"
+        }
+    ],
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "vue",
+        "html",
+        "markdown",
+        "json",
+        "jsonc",
+        "yaml",
+        "toml",
+        "xml",
+        "gql",
+        "graphql",
+        "astro",
+        "svelte",
+        "css",
+        "less",
+        "scss",
+        "pcss",
+        "postcss"
+    ],
+    "python-envs.pythonProjects": [
+        {
+            "path": ".",
+            "envManager": "ms-python.python:system",
+            "packageManager": "ms-python.python:pip"
+        }
+    ]
+}
