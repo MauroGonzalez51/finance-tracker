@@ -39,6 +39,13 @@ export default defineNuxtConfig({
             resolve("./shared/utils/**/!(*test|*.spec).{ts,js,mjs,mts}"),
         ],
     },
+    appConfig: {
+        composables: {
+            UseModal: {
+                MAX_STORAGE_LENGTH: 5,
+            },
+        },
+    },
 
     ///////////////////////////////////////////////////////
     // MODULES CONFIG

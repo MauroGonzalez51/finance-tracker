@@ -12,6 +12,7 @@
                     less.
                 </IonCardContent>
             </IonCard>
+            <IonActionSheet />
         </IonContent>
     </IonPage>
 </template>
