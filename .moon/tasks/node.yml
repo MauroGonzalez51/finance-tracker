@@ -1,0 +1,21 @@
+inheritedBy:
+    toolchain: node
+
+tasks:
+    lint:
+        command: pnpm
+        args:
+            - exec
+            - eslint
+            - --fix
+            - --quiet
+            - --cache
+            - --concurrency
+            - auto
+
+    pnpm:
+        command: pnpm
+        options:
+            cache: false
+            interactive: true
+            runFromWorkspaceRoot: true

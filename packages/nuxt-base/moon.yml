@@ -1,0 +1,33 @@
+project:
+    title: Nuxt Base
+    description: Nuxt Layer that handles all basic configuration
+
+layer: application
+
+language: typescript
+
+toolchains:
+    default: node
+
+workspace:
+    inheritedTasks:
+        include:
+            - pnpm
+        exclude:
+            - lint
+
+tasks:
+    pnpm:
+        args:
+            - --filter
+            - "@finance-tracker/packages-nuxt-base"
+
+    nuxt:
+        command: pnpm
+        args:
+            - exec
+            - nuxt
+        preset: server
+        options:
+            cache: false
+            interactive: true

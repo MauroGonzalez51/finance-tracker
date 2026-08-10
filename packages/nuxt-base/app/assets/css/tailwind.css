@@ -1,0 +1,112 @@
+@import "tw-animate-css";
+
+@layer theme, base, components, utilities;
+
+@custom-variant dark (&:is(.dark *));
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@layer base {
+    *:not([class*="ion-"]):not(:defined),
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        box-sizing: border-box;
+    }
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    figure,
+    blockquote,
+    dl,
+    dd {
+        margin: 0;
+    }
+
+    ul:not([class*="ion-"]),
+    ol:not([class*="ion-"]) {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    html,
+    :host {
+        line-height: 1.5;
+        -webkit-text-size-adjust: 100%;
+        tab-size: 4;
+        font-family: var(
+            --default-font-family,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            "Helvetica Neue",
+            Arial,
+            sans-serif
+        );
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    img,
+    svg,
+    video,
+    canvas,
+    audio,
+    iframe,
+    embed,
+    object {
+        display: block;
+        vertical-align: middle;
+    }
+
+    img,
+    video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    a:not([class*="ion-"]) {
+        color: inherit;
+        text-decoration: inherit;
+    }
+
+    button:not([class*="ion-"]),
+    input:not([class*="ion-"]),
+    select:not([class*="ion-"]),
+    textarea:not([class*="ion-"]) {
+        font: inherit;
+        color: inherit;
+        letter-spacing: inherit;
+        background-color: transparent;
+        border-radius: 0;
+        opacity: 1;
+    }
+
+    button:not([class*="ion-"]),
+    input:where([type="button"], [type="reset"], [type="submit"]):not([class*="ion-"]) {
+        appearance: button;
+    }
+
+    ::placeholder {
+        opacity: 1;
+    }
+
+    @supports (not (-webkit-appearance: -apple-pay-button)) or (contain-intrinsic-size: 1px) {
+        ::placeholder {
+            color: color-mix(in oklab, currentcolor 50%, transparent);
+        }
+    }
+
+    [hidden]:where(:not([hidden="until-found"])) {
+        display: none !important;
+    }
+}
