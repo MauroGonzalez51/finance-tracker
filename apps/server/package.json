@@ -1,0 +1,15 @@
+{
+    "name": "@finance-tracker/apps-server",
+    "type": "module",
+    "private": true,
+    "devDependencies": {
+        "@finance-tracker/tools-eslint": "workspace:*",
+        "@finance-tracker/tools-tsconfig": "workspace:*",
+        "@types/node": "^26.2.0",
+        "drizzle-kit": "^0.31.10",
+        "drizzle-orm": "^0.45.2",
+        "eslint": "^10.8.1",
+        "postgres": "^3.4.9",
+        "typescript": "6.0.3"
+    }
+}

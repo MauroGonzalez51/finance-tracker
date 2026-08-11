@@ -1,0 +1,6 @@
+{
+    "extends": "@finance-tracker/tools-tsconfig/tsconfig.json",
+    "compilerOptions": {
+        "types": ["node"]
+    }
+}

@@ -1,0 +1,39 @@
+project:
+    title: Server
+    description: Supabase Configuration
+
+layer: configuration
+
+language: typescript
+
+toolchains:
+    default: node
+
+workspace:
+    inheritedTasks:
+        include:
+            - pnpm
+            - lint
+
+tasks:
+    pnpm:
+        args:
+            - --filter
+            - "@finance-tracker/apps-server"
+
+    supabase:
+        command: supabase
+        options:
+            cache: false
+            interactive: true
+            runFromWorkspaceRoot: false
+
+    drizzle:
+        command: pnpm
+        args:
+            - exec
+            - drizzle-kit
+        options:
+            cache: false
+            interactive: true
+            runFromWorkspaceRoot: false
