@@ -10,3 +10,278 @@ _:future ion-header .header-background,
     --ion-padding: 20px;
     --ion-margin: 20px;
 }
+
+:root.md {
+    --ion-padding: 16px;
+    --ion-margin: 16px;
+    --ion-font-family: "Inter", "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --ion-text-color: #1a1a1a;
+    --ion-border-radius: 12px;
+    --ion-toolbar-background: transparent;
+    --ion-toolbar-color: var(--ion-text-color);
+    --ion-toolbar-border-color: transparent;
+}
+
+:root.md.dark {
+    --ion-text-color: #f0f0f0;
+}
+
+.md ion-card {
+    --background: var(--ion-background-color, #fff);
+    border-radius: 14px;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.06),
+        0 4px 12px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    margin: 12px 0;
+}
+
+.md.dark ion-card {
+    --background: var(--ion-card-background, #1c1c1e);
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.2),
+        0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.md ion-card-header {
+    padding: 16px 16px 8px;
+}
+
+.md ion-card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.md ion-card-subtitle {
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    opacity: 0.6;
+    margin-bottom: 2px;
+}
+
+.md ion-card-content {
+    padding: 8px 16px 16px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.md ion-button {
+    --border-radius: 10px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --box-shadow: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.md ion-button[fill="outline"],
+.md ion-button[fill="clear"] {
+    --border-width: 1px;
+}
+
+.md ion-item {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --inner-padding-end: 0;
+    --min-height: 48px;
+    --border-color: rgba(0, 0, 0, 0.06);
+    font-size: 0.9rem;
+}
+
+.md.dark ion-item {
+    --border-color: rgba(255, 255, 255, 0.06);
+}
+
+.md ion-item::part(native) {
+    border-radius: 0;
+}
+
+.md ion-list {
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.md ion-list-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    padding-left: 16px;
+    min-height: 36px;
+}
+
+.md ion-header {
+    box-shadow: none;
+}
+
+.md ion-header::after {
+    display: none;
+}
+
+.md ion-header ion-toolbar {
+    --min-height: 52px;
+    --padding-start: 8px;
+    --padding-end: 8px;
+}
+
+.md ion-toolbar ion-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    padding-inline: 12px;
+}
+
+.md ion-footer {
+    box-shadow: none;
+}
+
+.md ion-footer::before {
+    display: none;
+}
+
+.md ion-footer ion-toolbar {
+    --border-width: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.md.dark ion-footer ion-toolbar {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.md ion-content {
+    --background: var(--ion-background-color, #fafafa);
+}
+
+.md.dark ion-content {
+    --background: var(--ion-background-color, #121212);
+}
+
+.md ion-action-sheet {
+    --backdrop-opacity: 0.3;
+}
+
+.md .action-sheet-group {
+    border-radius: 14px;
+    margin: 8px;
+    overflow: hidden;
+}
+
+.md .action-sheet-button {
+    font-size: 0.9rem;
+    font-weight: 500;
+    min-height: 48px;
+}
+
+.md ion-modal {
+    --border-radius: 16px;
+    --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.md ion-alert {
+    --border-radius: 14px;
+}
+
+.md .alert-title {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.md .alert-message {
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.md ion-segment {
+    --background: transparent;
+    border-radius: 10px;
+}
+
+.md ion-segment-button {
+    --border-radius: 8px;
+    --indicator-box-shadow: none;
+    --indicator-height: 2px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    min-height: 36px;
+}
+
+.md ion-input,
+.md ion-textarea {
+    --padding-start: 14px;
+    --padding-end: 14px;
+    --border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+.md ion-chip {
+    --border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    height: 30px;
+}
+
+.md ion-fab-button {
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.06);
+    --border-radius: 16px;
+}
+
+.md ion-toast {
+    --border-radius: 10px;
+    --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    font-size: 0.85rem;
+}
+
+.md ion-badge {
+    --border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 7px;
+}
+
+.md ion-tab-bar {
+    --border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    height: 56px;
+}
+
+.md.dark ion-tab-bar {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.md ion-tab-button {
+    font-size: 0.7rem;
+    letter-spacing: 0;
+}
+
+.md ion-searchbar {
+    --border-radius: 12px;
+    --box-shadow: none;
+    --background: rgba(0, 0, 0, 0.04);
+    padding: 8px 0;
+    font-size: 0.9rem;
+}
+
+.md.dark ion-searchbar {
+    --background: rgba(255, 255, 255, 0.06);
+}
+
+.md ion-toggle {
+    --track-background: rgba(0, 0, 0, 0.12);
+    --handle-width: 22px;
+    --handle-height: 22px;
+}
+
+.md ion-checkbox {
+    --border-radius: 4px;
+    --size: 20px;
+}
