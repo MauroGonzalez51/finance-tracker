@@ -1,5 +1,4 @@
-import type { ActionSheetOptions, AlertOptions, LoadingOptions } from "@ionic/vue";
-import type { Component } from "vue";
+import type { ActionSheetOptions, AlertOptions, IonModal, LoadingOptions } from "@ionic/vue";
 
 declare global {
     namespace Components.Modal {
@@ -17,30 +16,29 @@ declare global {
 
             interface ActionSheet extends Base {
                 kind: "ion-action-sheet";
-                controller: ActionSheetOptions;
+                props: ActionSheetOptions;
             }
 
             interface Alert extends Base {
                 kind: "ion-alert";
-                controller: AlertOptions;
+                props: AlertOptions;
             }
+
+            type ModalComponent = typeof IonModal;
 
             interface Modal extends Base {
                 kind: "ion-modal";
-                component: Components.ComponentLoader;
+                component: Components.ComponentLoader<ModalComponent>;
                 props: object;
             }
 
             interface Loading extends Base {
                 kind: "ion-loading";
-                controller: LoadingOptions;
+                props: LoadingOptions;
             }
 
             type AnyComponent = ActionSheet | Alert | Modal | Loading;
         }
-
-        type ResolvedComponent =
-            HTMLIonActionSheetElement | HTMLIonAlertElement | Component | HTMLIonLoadingElement;
 
         namespace Method {
             interface LoadComponentOptions {

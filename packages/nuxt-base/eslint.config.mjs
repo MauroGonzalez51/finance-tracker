@@ -15,6 +15,12 @@ export default withNuxt(
             "style/indent": "off",
             "vue/singleline-html-element-content-newline": "off",
             "vue/operator-linebreak": "off",
+            "vue/no-deprecated-slot-attribute": [
+                "error",
+                {
+                    ignore: ["ion-buttons"],
+                },
+            ],
         },
     },
 );

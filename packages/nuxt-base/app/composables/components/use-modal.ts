@@ -1,4 +1,4 @@
-import { isEqual } from "es-toolkit";
+import type { Component } from "vue";
 
 /**
  * map
@@ -11,14 +11,14 @@ const COMPONENT_REGISTRY = shallowReactive<
     Map<
         string,
         {
-            component: Components.Modal.ResolvedComponent;
-            options: Components.Modal.ComponentKind.AnyComponent;
+            component: Component;
             addedAt: Temporal.Instant;
         }
     >
 >(new Map());
 
 export default function () {
+    const { $logger } = useNuxtApp();
     const config = useAppConfig();
 
     const state = useState<Components.Modal.ComposableState>(
@@ -31,61 +31,51 @@ export default function () {
         }),
     );
 
-    async function createComponent(args: Components.Modal.ComponentKind.AnyComponent) {
-        if (args.kind === "ion-action-sheet") {
-            return await actionSheetController.create(args.controller);
+    const component = computed<Components.Modal.ComponentKind.ModalComponent | undefined>(() => {
+        if (state.value.kind !== "ion-modal" || !state.value.key) {
+            return;
         }
 
-        if (args.kind === "ion-alert") {
-            return await alertController.create(args.controller);
-        }
-
-        if (args.kind === "ion-loading") {
-            return await loadingController.create(args.controller);
-        }
-
-        return defineAsyncComponent({ loader: args.component, delay: 0, timeout: 5_000 });
-    }
+        return COMPONENT_REGISTRY.get(state.value.key)
+            ?.component as Components.Modal.ComponentKind.ModalComponent;
+    });
 
     async function loadComponent(
         args: Components.Modal.ComponentKind.AnyComponent,
         options?: Components.Modal.Method.LoadComponentOptions,
     ) {
+        $logger.info("loadComponent", args);
         const { autoOpen } = options ?? { autoOpen: true };
 
-        /**
-         * check if the provided component already exists on registry
-         *
-         * if exists ->
-         *      kind === 'ion-modal' don't re-create component
-         *          -> controlled by props
-         *
-         *      else -> re-create component
-         */
-        const entry = COMPONENT_REGISTRY.get(args.key);
-        if (entry && entry.options.kind !== "ion-modal") {
-            COMPONENT_REGISTRY.set(args.key, {
-                component: createComponent(args),
-                addedAt: Temporal.Now.instant(),
-                options: args,
-            });
+        $logger.info("loadComponent -> initial state", state.value);
 
-            if (autoOpen) {
-                setOpen(true);
+        /**
+         * args.kind === 'ion-modal' -> resolve async component
+         *  -> save in registry
+         */
+        if (args.kind === "ion-modal") {
+            const existing = COMPONENT_REGISTRY.get(args.key);
+            if (existing) {
+                setState({ props: args.props });
+
+                if (autoOpen) {
+                    setOpen(true);
+                }
+
+                return;
             }
 
-            return;
+            const component = defineAsyncComponent({
+                loader: args.component,
+                delay: 0,
+                timeout: 5_000,
+            });
+
+            COMPONENT_REGISTRY.set(args.key, { component, addedAt: Temporal.Now.instant() });
         }
 
-        COMPONENT_REGISTRY.set(args.key, {
-            component: createComponent(args),
-            addedAt: Temporal.Now.instant(),
-            options: args,
-        });
-
-        if (args.kind === "ion-modal" && !isEqual(state.value.props, args.props)) {
-            setState({ props: args.props });
-        }
+        $logger.info("loadComponent -> updating state");
+        setState({ key: args.key, kind: args.kind, open: false, props: args.props });
 
         if (autoOpen) {
             setOpen(true);
@@ -103,8 +93,12 @@ export default function () {
                 return acc;
             });
 
+            $logger.info(`loadComponent -> removed oldest`, oldest);
+
             COMPONENT_REGISTRY.delete(oldest[0]);
         }
+
+        $logger.info("loadComponent -> final state", state.value);
     }
 
     function setOpen(open: boolean) {
@@ -117,6 +111,7 @@ export default function () {
 
     return {
         state,
+        component,
         dispatch: {
             loadComponent,
             setState,

@@ -1,5 +1,5 @@
 <template>
-    <IonPage>
+    <LayoutAppContainer>
         <IonContent class="ion-padding">
             <IonCard>
                 <IonCardHeader>
@@ -14,5 +14,5 @@
             </IonCard>
             <IonActionSheet />
         </IonContent>
-    </IonPage>
+    </LayoutAppContainer>
 </template>
