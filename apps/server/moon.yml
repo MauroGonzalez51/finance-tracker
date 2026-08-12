@@ -28,6 +28,9 @@ tasks:
             interactive: true
             runFromWorkspaceRoot: false
 
+    gen-types:
+        script: supabase gen types --local --lang typescript > types/database.d.ts
+
     drizzle:
         command: pnpm
         args:
@@ -37,3 +40,4 @@ tasks:
             cache: false
             interactive: true
             runFromWorkspaceRoot: false
+            envFile: .env.local
