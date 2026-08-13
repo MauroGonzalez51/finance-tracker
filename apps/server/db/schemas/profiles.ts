@@ -36,7 +36,12 @@ export const authUsers = AUTH_SCHEMA.table("users", {
 export const profiles = pgTable.withRLS(
     "profiles",
     {
-        /** UUID matching the user's `auth.users.id` */
+        /**
+         * UUID matching the user's `auth.users.id`.
+         *
+         * Acts as both PK and FK — ensures a 1:1 relationship
+         * between the profile and the Supabase Auth user.
+         */
         id: uuid("id")
             .primaryKey()
             .references(() => authUsers.id, { onDelete: "cascade" }),
