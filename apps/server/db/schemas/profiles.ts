@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgPolicy, pgTable, uuid } from "drizzle-orm/pg-core";
+import { pgPolicy, snakeCase, uuid } from "drizzle-orm/pg-core";
 import { AUTH_SCHEMA } from "./auth";
 
 /**
@@ -33,7 +33,7 @@ export const authUsers = AUTH_SCHEMA.table("users", {
  * - `profiles.id` ← `categories.profile_id` (one-to-many)
  * - `profiles.id` ← `transactions.profile_id` (one-to-many)
  */
-export const profiles = pgTable.withRLS(
+export const profiles = snakeCase.table.withRLS(
     "profiles",
     {
         /**
@@ -42,7 +42,7 @@ export const profiles = pgTable.withRLS(
          * Acts as both PK and FK — ensures a 1:1 relationship
          * between the profile and the Supabase Auth user.
          */
-        id: uuid("id")
+        id: uuid()
             .primaryKey()
             .references(() => authUsers.id, { onDelete: "cascade" }),
     },

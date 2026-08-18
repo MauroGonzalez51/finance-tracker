@@ -8,5 +8,5 @@
  * - `schemas/` — table definitions, enums, and column docs
  * - `relations/` — Drizzle relational query definitions
  */
-// export * from "./relations";
+export * from "./relations";
 export * from "./schemas";
