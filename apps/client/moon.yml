@@ -22,3 +22,22 @@ tasks:
         args:
             - --filter
             - "@finance-tracker/apps-client"
+
+    tauri:
+        command: pnpm
+        args:
+            - exec
+            - tauri
+        options:
+            cache: false
+            persistent: true
+            runFromWorkspaceRoot: false
+
+    diesel:
+        command: diesel
+        options:
+            cache: false
+            interactive: true
+            runFromWorkspaceRoot: false
+        env:
+            DATABASE_URL: "database.db"

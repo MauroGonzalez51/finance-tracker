@@ -1,5 +1,5 @@
 {
-  "name": "@finance-tracker/apps-client",
-  "integrations": {},
-  "type": "vue"
+    "name": "@finance-tracker/apps-client",
+    "integrations": {},
+    "type": "vue"
 }
