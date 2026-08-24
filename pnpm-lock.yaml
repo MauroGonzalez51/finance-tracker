@@ -18,6 +18,9 @@ importers:
       eslint:
         specifier: ^10.7.0
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      portless:
+        specifier: ^0.15.5
+        version: 0.15.5
       prettier:
         specifier: ^3.9.6
         version: 3.9.6
@@ -52,6 +55,9 @@ importers:
       eslint:
         specifier: ^10.8.1
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      portless:
+        specifier: ^0.15.5
+        version: 0.15.5
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -144,6 +150,9 @@ importers:
       eslint:
         specifier: ^10.7.0
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      portless:
+        specifier: ^0.15.5
+        version: 0.15.5
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -4919,6 +4928,12 @@ packages:
 
   pnpm-workspace-yaml@1.7.0:
     resolution: {integrity: sha512-cgjaozHkjWL4H8oKZydEWE4mg31XydK3/1cLKjHvwnFAXutp45yAlMKljpOdZEq4TtLuzYAMvy9j05wRm3aoPw==}
+
+  portless@0.15.5:
+    resolution: {integrity: sha512-zmJu4Q8/fY54oVUT/5NnmF4Ih8wTdCvCf6JCN783dRYl9mXkJBzXSckX2lztGCLIbM70varDjCudAbGKT73XPg==}
+    engines: {node: '>=24'}
+    os: [darwin, linux, win32]
+    hasBin: true
 
   postcss-calc@10.1.1:
     resolution: {integrity: sha512-NYEsLHh8DgG/PRH2+G9BTuUdtf9ViS+vdoQ0YA5OQdGsfN4ztiwtDWNtBl9EKeqNMFnIu8IKZ0cLxEQ5r5KVMw==}
@@ -11979,6 +11994,8 @@ snapshots:
   pnpm-workspace-yaml@1.7.0:
     dependencies:
       yaml: 2.9.0
+
+  portless@0.15.5: {}
 
   postcss-calc@10.1.1(postcss@8.5.26):
     dependencies:

@@ -21,6 +21,7 @@
         "@finance-tracker/tools-eslint": "workspace:*",
         "@tauri-apps/cli": "^2.11.4",
         "eslint": "^10.8.1",
+        "portless": "^0.15.5",
         "tailwindcss": "^4.3.3",
         "typescript": "6.0.3"
     }

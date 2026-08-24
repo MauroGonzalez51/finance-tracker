@@ -15,6 +15,7 @@ workspace:
             - pnpm
             - nuxt
             - build
+            - portless
             - lint
 
 tasks:
