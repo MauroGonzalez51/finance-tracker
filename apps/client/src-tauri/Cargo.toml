@@ -2,7 +2,7 @@
 name = "finance-tracker-client"
 version = "0.1.0"
 description = "A Tauri App"
-authors = ["you"]
+authors = ["MauroGonzalez51"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -22,8 +22,6 @@ tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-diesel = { version = "2.3.12", features = ["sqlite", "chrono"] }
-diesel_migrations = "2.3.2"
 anyhow = "1.0.104"
 libsqlite3-sys = { version = "0.38.2", features = ["bundled"] }
 directories = "6.0.0"

@@ -34,11 +34,8 @@ tasks:
             persistent: true
             runFromWorkspaceRoot: false
 
-    diesel:
-        command: diesel
+    cargo:
+        command: scripts/cargo.sh
         options:
             cache: false
-            interactive: true
             runFromWorkspaceRoot: false
-        env:
-            DATABASE_URL: "database.db"
