@@ -1594,6 +1594,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "directories",
+ "migration",
  "rust_decimal",
  "sea-orm",
  "sea-orm-migration",
@@ -2897,6 +2898,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "migration"
+version = "0.1.0"
+dependencies = [
+ "sea-orm-migration",
+ "tokio",
+]
+
+[[package]]
 name = "mime"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4162,6 +4171,9 @@ dependencies = [
  "glob",
  "indoc",
  "regex",
+ "sea-schema",
+ "sqlx",
+ "tokio",
  "tracing",
  "tracing-subscriber",
  "url",

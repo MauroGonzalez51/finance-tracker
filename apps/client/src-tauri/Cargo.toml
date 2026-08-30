@@ -5,12 +5,7 @@ description = "A Tauri App"
 authors = ["MauroGonzalez51"]
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [lib]
-# The `_lib` suffix may seem redundant but it is necessary
-# to make the lib name unique and wouldn't conflict with the bin name.
-# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
 name = "finance_tracker_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
@@ -30,6 +25,9 @@ tokio = { version = "1.53.1", features = ["full"] }
 chrono = "0.4.45"
 rust_decimal = "1.42.1"
 uuid = { version = "1.26.0", features = ["v4"] }
+
+migration = { path = "migration" }
+
 sea-orm = { version = "2.0.2", features = [
     "sqlx-sqlite",
     "runtime-tokio-native-tls",
