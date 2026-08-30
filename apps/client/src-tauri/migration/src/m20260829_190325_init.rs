@@ -1,4 +1,4 @@
-use sea_orm_migration::{prelude::*, schema::*};
+use sea_orm_migration::prelude::*;
 
 pub struct Migration;
 
@@ -14,10 +14,10 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table("profiles")
+                    .table(Profiles::Table)
                     .if_not_exists()
-                    .col(pk_uuid("id"))
-                    .take(),
+                    .col(ColumnDef::new(Profiles::Id).uuid().not_null().primary_key())
+                    .to_owned(),
             )
             .await?;
 
@@ -26,9 +26,15 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table("profiles").take())
+            .drop_table(Table::drop().table(Profiles::Table).to_owned())
             .await?;
 
         Ok(())
     }
+}
+
+#[derive(Iden)]
+enum Profiles {
+    Table,
+    Id,
 }

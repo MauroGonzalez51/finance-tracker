@@ -35,17 +35,12 @@ tasks:
             runFromWorkspaceRoot: false
 
     dev:
-        command: pnpm
+        extends: tauri
         args:
-            - exec
-            - tauri
             - dev
         env:
+            RUST_BACKTRACE: "1"
             DATABASE_URL: sqlite://database.db?mode=rwc
-        options:
-            cache: false
-            persistent: true
-            runFromWorkspaceRoot: false
 
     cargo:
         command: scripts/cargo.sh
@@ -62,9 +57,7 @@ tasks:
             runFromWorkspaceRoot: false
 
     generate-entities:
-        command: scripts/sea-orm.sh
-        env:
-            DATABASE_URL: sqlite://database.db?mode=rwc
+        extends: sea-orm
         args:
             - generate
             - entity
@@ -75,3 +68,5 @@ tasks:
             - src-tauri/migration/src/m*.rs
         outputs:
             - src-tauri/src/db/entity/*.rs
+        options:
+            cache: true
