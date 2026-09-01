@@ -3,22 +3,19 @@
 use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
-#[sea_orm(table_name = "accounts")]
+#[sea_orm(table_name = "device_profile_sessions")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
     pub profile_id: Uuid,
-    pub name: Option<String>,
-    pub r#type: String,
-    #[sea_orm(column_type = "Text")]
-    pub balance: String,
-    pub currency_code: String,
+    pub is_biometric_enabled: bool,
+    #[sea_orm(column_type = "Text", nullable)]
+    pub biometric_session_token: Option<String>,
+    pub updated_at: DateTime,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::payment_methods::Entity")]
-    PaymentMethods,
     #[sea_orm(
         belongs_to = "super::profiles::Entity",
         from = "Column::ProfileId",
@@ -27,12 +24,6 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Profiles,
-}
-
-impl Related<super::payment_methods::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::PaymentMethods.def()
-    }
 }
 
 impl Related<super::profiles::Entity> for Entity {

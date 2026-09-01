@@ -38,7 +38,7 @@ impl MigrationTrait for Migration {
                     )
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_accounts_profile_id")
+                            .name(Accounts::FkAccountsProfileId.to_string())
                             .from(Accounts::Table, Accounts::ProfileId)
                             .to(Profiles::Table, Profiles::Id)
                             .on_delete(ForeignKeyAction::Cascade)
@@ -51,7 +51,7 @@ impl MigrationTrait for Migration {
         manager
             .create_index(
                 Index::create()
-                    .name("idx_accounts_profile_id")
+                    .name(Accounts::IdxAccountsProfileId.to_string())
                     .table(Accounts::Table)
                     .col(Accounts::ProfileId)
                     .to_owned(),
@@ -79,6 +79,8 @@ enum Accounts {
     Type,
     Balance,
     CurrencyCode,
+    FkAccountsProfileId,
+    IdxAccountsProfileId,
 }
 
 #[derive(Iden)]

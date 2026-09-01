@@ -8,6 +8,10 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
+            #[cfg(mobile)]
+            app.handle()
+                .plugin(tauri_plugin_biometric::Builder::new().build());
+
             let connection = tauri::async_runtime::block_on(db::init())
                 .context("failed to initialize database connection")?;
 
