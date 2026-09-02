@@ -63,6 +63,7 @@ impl MigrationTrait for Migration {
             .create_index(
                 Index::create()
                     .name(PaymentMethods::IdxPaymentMethodsAccountId.to_string())
+                    .if_not_exists()
                     .table(PaymentMethods::Table)
                     .col(PaymentMethods::AccountId)
                     .to_owned(),
@@ -122,6 +123,7 @@ impl MigrationTrait for Migration {
             .create_index(
                 Index::create()
                     .name(PaymentMethodConfig::IdxPaymentMethodConfigPaymentMethodId.to_string())
+                    .if_not_exists()
                     .table(PaymentMethodConfig::Table)
                     .col(PaymentMethodConfig::PaymentMethodId)
                     .to_owned(),

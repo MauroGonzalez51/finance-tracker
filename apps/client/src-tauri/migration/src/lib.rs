@@ -5,6 +5,7 @@ mod m20260830_152950_create_accounts;
 mod m20260901_211119_payment_methods;
 mod m20260901_222536_app_config;
 mod m20260901_233308_create_categories;
+mod m20260902_130334_create_transactions;
 
 pub struct Migrator;
 
@@ -17,6 +18,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20260901_211119_payment_methods::Migration),
             Box::new(m20260901_222536_app_config::Migration),
             Box::new(m20260901_233308_create_categories::Migration),
+            Box::new(m20260902_130334_create_transactions::Migration),
         ]
     }
 }

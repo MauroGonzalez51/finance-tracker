@@ -40,6 +40,7 @@ impl MigrationTrait for Migration {
             .create_index(
                 Index::create()
                     .name(Categories::IdxCategoriesProfileId.to_string())
+                    .if_not_exists()
                     .col(Categories::ProfileId)
                     .to_owned(),
             )
@@ -49,6 +50,7 @@ impl MigrationTrait for Migration {
             .create_index(
                 Index::create()
                     .name(Categories::IdxCategoriesParentId.to_string())
+                    .if_not_exists()
                     .col(Categories::ParentId)
                     .to_owned(),
             )

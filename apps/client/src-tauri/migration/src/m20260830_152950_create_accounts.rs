@@ -52,6 +52,7 @@ impl MigrationTrait for Migration {
             .create_index(
                 Index::create()
                     .name(Accounts::IdxAccountsProfileId.to_string())
+                    .if_not_exists()
                     .table(Accounts::Table)
                     .col(Accounts::ProfileId)
                     .to_owned(),
