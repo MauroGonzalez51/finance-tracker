@@ -15,10 +15,13 @@
         "@nuxtjs/ionic": "1.0.2",
         "@tauri-apps/plugin-biometric": "~2.3.3",
         "nuxt": "^4.5.2",
+        "nuxt-prepare": "4.0.0",
         "vue": "^3.5.41",
-        "vue-router": "^5.2.0"
+        "vue-router": "^5.2.0",
+        "zod": "^4.5.4"
     },
     "devDependencies": {
+        "@clack/prompts": "^1.7.0",
         "@finance-tracker/tools-eslint": "workspace:*",
         "@tauri-apps/cli": "^2.11.4",
         "eslint": "^10.8.1",

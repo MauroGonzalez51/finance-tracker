@@ -2,7 +2,7 @@
     "folders": [
         {
             "name": "ROOT",
-            "path": "../",
+            "path": "..",
         },
         {
             "name": "# Client",
@@ -10,7 +10,7 @@
         },
         {
             "name": "# Server",
-            "path": "../apps/server"
+            "path": "../apps/server",
         },
         {
             "name": "+ Nuxt Base",

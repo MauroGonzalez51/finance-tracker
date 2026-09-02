@@ -24,6 +24,7 @@ tasks:
         options:
             cache: false
             interactive: true
+            outputStyle: stream
 
     build:
         command: pnpm

@@ -3,10 +3,15 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
     extends: ["../../packages/nuxt-base"],
 
+    ///////////////////////////////////////////////////////
+    // TAURI REQUIRED CONFIG
+    ///////////////////////////////////////////////////////
     ssr: false,
+
     devServer: {
         host: "0",
     },
+
     vite: {
         clearScreen: false,
         envPrefix: ["VITE", "TAURI_"],
@@ -15,4 +20,6 @@ export default defineNuxtConfig({
         },
     },
     ignore: ["**/src-tauri/**"],
+
+    modules: ["nuxt-prepare"],
 });
