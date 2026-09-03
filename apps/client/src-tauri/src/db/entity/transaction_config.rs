@@ -3,12 +3,13 @@
 use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
-#[sea_orm(table_name = "payment_method_config")]
+#[sea_orm(table_name = "transaction_config")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
     #[sea_orm(unique)]
-    pub payment_method_id: Uuid,
+    pub transaction_id: Uuid,
+    pub installments: i64,
     #[sea_orm(column_type = "Text", nullable)]
     pub credit_limit: Option<String>,
     #[sea_orm(column_type = "Text", nullable)]
@@ -19,18 +20,18 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::payment_methods::Entity",
-        from = "Column::PaymentMethodId",
-        to = "super::payment_methods::Column::Id",
+        belongs_to = "super::transactions::Entity",
+        from = "Column::TransactionId",
+        to = "super::transactions::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
-    PaymentMethods,
+    Transactions,
 }
 
-impl Related<super::payment_methods::Entity> for Entity {
+impl Related<super::transactions::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::PaymentMethods.def()
+        Relation::Transactions.def()
     }
 }
 

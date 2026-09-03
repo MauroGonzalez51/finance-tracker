@@ -7,19 +7,31 @@ use sea_orm::entity::prelude::*;
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
+    #[sea_orm(column_type = "Text")]
+    pub name: String,
+    #[sea_orm(column_type = "Text", unique)]
+    pub email: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(has_many = "super::accounts::Entity")]
     Accounts,
-    #[sea_orm(has_many = "super::device_profile_sessions::Entity")]
+    #[sea_orm(has_many = "super::categories::Entity")]
+    Categories,
+    #[sea_orm(has_one = "super::device_profile_sessions::Entity")]
     DeviceProfileSessions,
 }
 
 impl Related<super::accounts::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Accounts.def()
+    }
+}
+
+impl Related<super::categories::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Categories.def()
     }
 }
 

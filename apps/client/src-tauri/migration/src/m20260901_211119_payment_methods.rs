@@ -84,8 +84,7 @@ impl MigrationTrait for Migration {
                     .col(
                         ColumnDef::new(PaymentMethodConfig::PaymentMethodId)
                             .uuid()
-                            .not_null()
-                            .unique_key(),
+                            .not_null(),
                     )
                     .col(
                         ColumnDef::new(PaymentMethodConfig::CreditLimit)
@@ -127,6 +126,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .table(PaymentMethodConfig::Table)
                     .col(PaymentMethodConfig::PaymentMethodId)
+                    .unique()
                     .to_owned(),
             )
             .await?;

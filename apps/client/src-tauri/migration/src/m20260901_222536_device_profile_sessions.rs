@@ -62,6 +62,18 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_index(
+                Index::create()
+                    .name(DeviceProfileSessions::IdxDeviceProfileSessionsProfileId.to_string())
+                    .if_not_exists()
+                    .table(DeviceProfileSessions::Table)
+                    .col(DeviceProfileSessions::ProfileId)
+                    .unique()
+                    .to_owned(),
+            )
+            .await?;
+
         Ok(())
     }
 
@@ -82,6 +94,7 @@ enum DeviceProfileSessions {
     IsBiometricEnabled,
     BiometricSessionToken,
     UpdatedAt,
+    IdxDeviceProfileSessionsProfileId,
     FkDeviceProfileSessionsProfilesId,
 }
 

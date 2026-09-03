@@ -66,6 +66,19 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_index(
+                Index::create()
+                    .name(Categories::IdxCategoriesUniqueProfileName.to_string())
+                    .if_not_exists()
+                    .table(Categories::Table)
+                    .col(Categories::ProfileId)
+                    .col(Categories::Name)
+                    .unique()
+                    .to_owned(),
+            )
+            .await?;
+
         Ok(())
     }
 
@@ -88,6 +101,7 @@ enum Categories {
     ParentId,
     IdxCategoriesProfileId,
     IdxCategoriesParentId,
+    IdxCategoriesUniqueProfileName,
     FkCategoriesProfileId,
     FkCategoriesParentId,
 }

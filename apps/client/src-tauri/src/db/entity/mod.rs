@@ -3,7 +3,10 @@
 pub mod prelude;
 
 pub mod accounts;
+pub mod categories;
 pub mod device_profile_sessions;
 pub mod payment_method_config;
 pub mod payment_methods;
 pub mod profiles;
+pub mod transaction_config;
+pub mod transactions;

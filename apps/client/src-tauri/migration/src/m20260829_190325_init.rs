@@ -23,6 +23,18 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_index(
+                Index::create()
+                    .name(Profiles::IdxProfilesEmail.to_string())
+                    .if_not_exists()
+                    .table(Profiles::Table)
+                    .col(Profiles::Email)
+                    .unique()
+                    .to_owned(),
+            )
+            .await?;
+
         Ok(())
     }
 
@@ -41,4 +53,5 @@ enum Profiles {
     Id,
     Name,
     Email,
+    IdxProfilesEmail,
 }

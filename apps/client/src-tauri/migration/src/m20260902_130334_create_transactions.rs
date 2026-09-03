@@ -115,8 +115,7 @@ impl MigrationTrait for Migration {
                     .col(
                         ColumnDef::new(TransactionConfig::TransactionId)
                             .uuid()
-                            .not_null()
-                            .unique_key(),
+                            .not_null(),
                     )
                     .col(
                         ColumnDef::new(TransactionConfig::Installments)
@@ -154,6 +153,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .table(TransactionConfig::Table)
                     .col(TransactionConfig::TransactionId)
+                    .unique()
                     .to_owned(),
             )
             .await?;
