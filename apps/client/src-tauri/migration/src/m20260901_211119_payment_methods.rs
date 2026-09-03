@@ -84,7 +84,8 @@ impl MigrationTrait for Migration {
                     .col(
                         ColumnDef::new(PaymentMethodConfig::PaymentMethodId)
                             .uuid()
-                            .not_null(),
+                            .not_null()
+                            .unique_key(),
                     )
                     .col(
                         ColumnDef::new(PaymentMethodConfig::CreditLimit)

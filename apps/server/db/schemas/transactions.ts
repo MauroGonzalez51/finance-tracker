@@ -222,6 +222,7 @@ export const transactionConfig = snakeCase.table.withRLS(
          */
         transactionId: uuid()
             .notNull()
+            .unique()
             .references(() => transactions.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
         /**

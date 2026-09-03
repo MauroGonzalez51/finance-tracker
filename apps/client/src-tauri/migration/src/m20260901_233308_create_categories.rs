@@ -28,8 +28,16 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Categories::ParentId).uuid().null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name(Categories::FkParentIdCategoriesId.to_string())
+                            .name(Categories::FkCategoriesProfileId.to_string())
                             .from(Categories::Table, Categories::ProfileId)
+                            .to(Profiles::Table, Profiles::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(Categories::FkCategoriesParentId.to_string())
+                            .from(Categories::Table, Categories::ParentId)
                             .to(Categories::Table, Categories::Id),
                     )
                     .to_owned(),
@@ -41,6 +49,7 @@ impl MigrationTrait for Migration {
                 Index::create()
                     .name(Categories::IdxCategoriesProfileId.to_string())
                     .if_not_exists()
+                    .table(Categories::Table)
                     .col(Categories::ProfileId)
                     .to_owned(),
             )
@@ -51,6 +60,7 @@ impl MigrationTrait for Migration {
                 Index::create()
                     .name(Categories::IdxCategoriesParentId.to_string())
                     .if_not_exists()
+                    .table(Categories::Table)
                     .col(Categories::ParentId)
                     .to_owned(),
             )
@@ -78,5 +88,12 @@ enum Categories {
     ParentId,
     IdxCategoriesProfileId,
     IdxCategoriesParentId,
-    FkParentIdCategoriesId,
+    FkCategoriesProfileId,
+    FkCategoriesParentId,
+}
+
+#[derive(Iden)]
+enum Profiles {
+    Table,
+    Id,
 }

@@ -17,6 +17,8 @@ impl MigrationTrait for Migration {
                     .table(Profiles::Table)
                     .if_not_exists()
                     .col(ColumnDef::new(Profiles::Id).uuid().not_null().primary_key())
+                    .col(ColumnDef::new(Profiles::Name).text().not_null())
+                    .col(ColumnDef::new(Profiles::Email).text().not_null())
                     .to_owned(),
             )
             .await?;
@@ -37,4 +39,6 @@ impl MigrationTrait for Migration {
 enum Profiles {
     Table,
     Id,
+    Name,
+    Email,
 }

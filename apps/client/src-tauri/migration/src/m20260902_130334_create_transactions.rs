@@ -101,12 +101,76 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_table(
+                Table::create()
+                    .table(TransactionConfig::Table)
+                    .if_not_exists()
+                    .col(
+                        ColumnDef::new(TransactionConfig::Id)
+                            .uuid()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(TransactionConfig::TransactionId)
+                            .uuid()
+                            .not_null()
+                            .unique_key(),
+                    )
+                    .col(
+                        ColumnDef::new(TransactionConfig::Installments)
+                            .integer()
+                            .not_null()
+                            .default(1),
+                    )
+                    .col(ColumnDef::new(TransactionConfig::CreditLimit).text().null())
+                    .col(
+                        ColumnDef::new(TransactionConfig::InterestRate)
+                            .text()
+                            .null(),
+                    )
+                    .col(
+                        ColumnDef::new(TransactionConfig::BillingCycleDay)
+                            .integer()
+                            .null(),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(TransactionConfig::FkTransactionConfigTransactionId.to_string())
+                            .from(TransactionConfig::Table, TransactionConfig::TransactionId)
+                            .to(Transactions::Table, Transactions::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name(TransactionConfig::IdxTransactionConfigTransactionId.to_string())
+                    .if_not_exists()
+                    .table(TransactionConfig::Table)
+                    .col(TransactionConfig::TransactionId)
+                    .to_owned(),
+            )
+            .await?;
+
         Ok(())
     }
 
-    async fn down(&self, _manager: &SchemaManager) -> Result<(), DbErr> {
-        // Replace the sample below with your own migration scripts
-        todo!();
+    async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        manager
+            .drop_table(Table::drop().table(Transactions::Table).to_owned())
+            .await?;
+
+        manager
+            .drop_table(Table::drop().table(TransactionConfig::Table).to_owned())
+            .await?;
+
+        Ok(())
     }
 }
 
@@ -128,6 +192,19 @@ enum Transactions {
     FkTransactionsAccountId,
     FkTransactionsPaymentMethodId,
     FkTransactionsCategoryId,
+}
+
+#[derive(Iden)]
+enum TransactionConfig {
+    Table,
+    Id,
+    TransactionId,
+    Installments,
+    CreditLimit,
+    InterestRate,
+    BillingCycleDay,
+    IdxTransactionConfigTransactionId,
+    FkTransactionConfigTransactionId,
 }
 
 #[derive(Iden)]
