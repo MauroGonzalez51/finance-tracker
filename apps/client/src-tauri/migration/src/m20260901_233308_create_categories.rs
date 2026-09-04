@@ -1,3 +1,4 @@
+use crate::create_indexes;
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -44,27 +45,14 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        manager
-            .create_index(
-                Index::create()
-                    .name(Categories::IdxCategoriesProfileId.to_string())
-                    .if_not_exists()
-                    .table(Categories::Table)
-                    .col(Categories::ProfileId)
-                    .to_owned(),
-            )
-            .await?;
-
-        manager
-            .create_index(
-                Index::create()
-                    .name(Categories::IdxCategoriesParentId.to_string())
-                    .if_not_exists()
-                    .table(Categories::Table)
-                    .col(Categories::ParentId)
-                    .to_owned(),
-            )
-            .await?;
+        create_indexes!(
+            manager,
+            Categories::Table,
+            [
+                Categories::ProfileId => Categories::IdxCategoriesProfileId,
+                Categories::ParentId => Categories::IdxCategoriesParentId
+            ]
+        );
 
         manager
             .create_index(

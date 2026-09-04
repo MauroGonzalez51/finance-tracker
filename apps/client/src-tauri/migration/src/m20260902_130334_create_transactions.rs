@@ -1,3 +1,4 @@
+use crate::create_indexes;
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -68,38 +69,18 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        manager
-            .create_index(
-                Index::create()
-                    .name(Transactions::IdxTransactionsAccountId.to_string())
-                    .if_not_exists()
-                    .table(Transactions::Table)
-                    .col(Transactions::AccountId)
-                    .to_owned(),
-            )
-            .await?;
-
-        manager
-            .create_index(
-                Index::create()
-                    .name(Transactions::IdxTransactionsPaymentMethodId.to_string())
-                    .if_not_exists()
-                    .table(Transactions::Table)
-                    .col(Transactions::PaymentMethodId)
-                    .to_owned(),
-            )
-            .await?;
-
-        manager
-            .create_index(
-                Index::create()
-                    .name(Transactions::IdxTransactionsCategoryId.to_string())
-                    .if_not_exists()
-                    .table(Transactions::Table)
-                    .col(Transactions::CategoryId)
-                    .to_owned(),
-            )
-            .await?;
+        create_indexes!(
+            manager,
+            Transactions::Table,
+            [
+                    Transactions::AccountId =>
+                    Transactions::IdxTransactionsAccountId,
+                    Transactions::PaymentMethodId =>
+                    Transactions::IdxTransactionsPaymentMethodId,
+                    Transactions::CategoryId =>
+                    Transactions::IdxTransactionsCategoryId
+            ]
+        );
 
         manager
             .create_table(
@@ -146,17 +127,14 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        manager
-            .create_index(
-                Index::create()
-                    .name(TransactionConfig::IdxTransactionConfigTransactionId.to_string())
-                    .if_not_exists()
-                    .table(TransactionConfig::Table)
-                    .col(TransactionConfig::TransactionId)
-                    .unique()
-                    .to_owned(),
-            )
-            .await?;
+        create_indexes!(
+            manager,
+            TransactionConfig::Table,
+            [
+                TransactionConfig::TransactionId =>
+                TransactionConfig::IdxTransactionConfigTransactionId
+            ]
+        );
 
         Ok(())
     }

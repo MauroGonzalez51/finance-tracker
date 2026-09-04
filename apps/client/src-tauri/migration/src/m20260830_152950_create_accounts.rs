@@ -1,3 +1,4 @@
+use crate::create_indexes;
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -48,16 +49,11 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        manager
-            .create_index(
-                Index::create()
-                    .name(Accounts::IdxAccountsProfileId.to_string())
-                    .if_not_exists()
-                    .table(Accounts::Table)
-                    .col(Accounts::ProfileId)
-                    .to_owned(),
-            )
-            .await?;
+        create_indexes!(
+            manager,
+            Accounts::Table,
+            [Accounts::ProfileId => Accounts::IdxAccountsProfileId]
+        );
 
         Ok(())
     }

@@ -1,3 +1,4 @@
+use crate::create_unique_indexes;
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -59,16 +60,14 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        manager
-            .create_index(
-                Index::create()
-                    .name(PaymentMethods::IdxPaymentMethodsAccountId.to_string())
-                    .if_not_exists()
-                    .table(PaymentMethods::Table)
-                    .col(PaymentMethods::AccountId)
-                    .to_owned(),
-            )
-            .await?;
+        create_unique_indexes!(
+            manager,
+            PaymentMethods::Table,
+            [
+                PaymentMethods::AccountId =>
+                PaymentMethods::IdxPaymentMethodsAccountId
+            ]
+        );
 
         manager
             .create_table(
@@ -119,17 +118,14 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        manager
-            .create_index(
-                Index::create()
-                    .name(PaymentMethodConfig::IdxPaymentMethodConfigPaymentMethodId.to_string())
-                    .if_not_exists()
-                    .table(PaymentMethodConfig::Table)
-                    .col(PaymentMethodConfig::PaymentMethodId)
-                    .unique()
-                    .to_owned(),
-            )
-            .await?;
+        create_unique_indexes!(
+            manager,
+            PaymentMethodConfig::Table,
+            [
+                PaymentMethodConfig::PaymentMethodId =>
+                PaymentMethodConfig::IdxPaymentMethodConfigPaymentMethodId
+            ]
+        );
 
         Ok(())
     }

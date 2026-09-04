@@ -1,3 +1,4 @@
+use crate::create_unique_indexes;
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -62,17 +63,14 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        manager
-            .create_index(
-                Index::create()
-                    .name(DeviceProfileSessions::IdxDeviceProfileSessionsProfileId.to_string())
-                    .if_not_exists()
-                    .table(DeviceProfileSessions::Table)
-                    .col(DeviceProfileSessions::ProfileId)
-                    .unique()
-                    .to_owned(),
-            )
-            .await?;
+        create_unique_indexes!(
+            manager,
+            DeviceProfileSessions::Table,
+            [
+                DeviceProfileSessions::ProfileId =>
+                DeviceProfileSessions::IdxDeviceProfileSessionsProfileId
+            ]
+        );
 
         Ok(())
     }
