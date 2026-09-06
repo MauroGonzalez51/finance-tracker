@@ -1,6 +1,7 @@
 {
     "devDependencies": {
         "@finance-tracker/tools-eslint": "workspace:*",
+        "cross-env": "^10.1.0",
         "eslint": "^10.7.0",
         "portless": "^0.15.5",
         "prettier": "^3.9.6",

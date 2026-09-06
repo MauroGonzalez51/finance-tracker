@@ -4,6 +4,7 @@ import { defineNuxtPrepareHandler } from "nuxt-prepare/config";
 import { z } from "zod";
 
 const EnvSchema = z.object({
+    SKIP_NUXT_PREPARE: z.coerce.boolean().optional(),
     NODE_ENV: z.enum(["development", "production", "test"]).optional(),
     VITEST: z.boolean().optional(),
 });
@@ -16,7 +17,7 @@ const SupabaseEnvSchema = EnvSchema.safeExtend({
 
 export default defineNuxtPrepareHandler(async () => {
     const env = EnvSchema.safeParse(process.env);
-    if (env.data?.NODE_ENV === "test" || env.data?.VITEST) {
+    if (env.data?.NODE_ENV === "test" || env.data?.VITEST || env.data?.SKIP_NUXT_PREPARE) {
         return {};
     }
 
