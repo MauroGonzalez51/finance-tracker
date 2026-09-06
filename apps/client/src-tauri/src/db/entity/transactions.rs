@@ -7,16 +7,23 @@ use sea_orm::entity::prelude::*;
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
-    pub account_id: Option<Uuid>,
-    pub payment_method_id: Option<Uuid>,
+    pub profile_id: Uuid,
     pub category_id: Option<Uuid>,
-    #[sea_orm(column_type = "Text")]
+    pub source_account_id: Option<Uuid>,
+    pub source_payment_method_id: Option<Uuid>,
+    pub destination_account_id: Option<Uuid>,
     pub r#type: String,
+    pub status: String,
     #[sea_orm(column_type = "Text")]
     pub amount: String,
+    #[sea_orm(column_type = "Text")]
+    pub fee_amount: String,
+    pub currency_code: String,
+    #[sea_orm(column_type = "Text")]
+    pub exchange_rate: String,
     #[sea_orm(column_type = "Text", nullable)]
     pub notes: Option<String>,
-    pub date: DateTime,
+    pub transaction_date: DateTime,
     pub created_at: DateTime,
 }
 
@@ -24,12 +31,20 @@ pub struct Model {
 pub enum Relation {
     #[sea_orm(
         belongs_to = "super::accounts::Entity",
-        from = "Column::AccountId",
+        from = "Column::DestinationAccountId",
         to = "super::accounts::Column::Id",
         on_update = "Cascade",
         on_delete = "SetNull"
     )]
-    Accounts,
+    Accounts2,
+    #[sea_orm(
+        belongs_to = "super::accounts::Entity",
+        from = "Column::SourceAccountId",
+        to = "super::accounts::Column::Id",
+        on_update = "Cascade",
+        on_delete = "SetNull"
+    )]
+    Accounts1,
     #[sea_orm(
         belongs_to = "super::categories::Entity",
         from = "Column::CategoryId",
@@ -38,27 +53,43 @@ pub enum Relation {
         on_delete = "SetNull"
     )]
     Categories,
+    #[sea_orm(has_one = "super::credit_transaction_details::Entity")]
+    CreditTransactionDetails,
+    #[sea_orm(has_many = "super::loan_payments::Entity")]
+    LoanPayments,
     #[sea_orm(
         belongs_to = "super::payment_methods::Entity",
-        from = "Column::PaymentMethodId",
+        from = "Column::SourcePaymentMethodId",
         to = "super::payment_methods::Column::Id",
         on_update = "Cascade",
         on_delete = "SetNull"
     )]
     PaymentMethods,
-    #[sea_orm(has_one = "super::transaction_config::Entity")]
-    TransactionConfig,
-}
-
-impl Related<super::accounts::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::Accounts.def()
-    }
+    #[sea_orm(
+        belongs_to = "super::profiles::Entity",
+        from = "Column::ProfileId",
+        to = "super::profiles::Column::Id",
+        on_update = "Cascade",
+        on_delete = "Cascade"
+    )]
+    Profiles,
 }
 
 impl Related<super::categories::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Categories.def()
+    }
+}
+
+impl Related<super::credit_transaction_details::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::CreditTransactionDetails.def()
+    }
+}
+
+impl Related<super::loan_payments::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::LoanPayments.def()
     }
 }
 
@@ -68,9 +99,9 @@ impl Related<super::payment_methods::Entity> for Entity {
     }
 }
 
-impl Related<super::transaction_config::Entity> for Entity {
+impl Related<super::profiles::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::TransactionConfig.def()
+        Relation::Profiles.def()
     }
 }
 

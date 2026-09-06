@@ -1,4 +1,4 @@
-use crate::create_indexes;
+use crate::{Accounts, IndexConfig, Profiles, create_indexes};
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -24,7 +24,8 @@ impl MigrationTrait for Migration {
                         ColumnDef::new(Accounts::Type)
                             .not_null()
                             .string_len(20)
-                            .default("SAVING"),
+                            .default("SAVING")
+                            .comment("CHECKING, SAVING, CASH, DIGITAL_WALLET"),
                     )
                     .col(
                         ColumnDef::new(Accounts::Balance)
@@ -49,11 +50,15 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        create_indexes!(
+        create_indexes(
             manager,
             Accounts::Table,
-            [Accounts::ProfileId => Accounts::IdxAccountsProfileId]
-        );
+            &[IndexConfig::new(
+                Accounts::ProfileId,
+                Accounts::IdxAccountsProfileId,
+            )],
+        )
+        .await?;
 
         Ok(())
     }
@@ -65,23 +70,4 @@ impl MigrationTrait for Migration {
 
         Ok(())
     }
-}
-
-#[derive(Iden)]
-enum Accounts {
-    Table,
-    Id,
-    ProfileId,
-    Name,
-    Type,
-    Balance,
-    CurrencyCode,
-    FkAccountsProfileId,
-    IdxAccountsProfileId,
-}
-
-#[derive(Iden)]
-enum Profiles {
-    Table,
-    Id,
 }

@@ -28,6 +28,8 @@ pub enum Relation {
     Accounts,
     #[sea_orm(has_one = "super::payment_method_config::Entity")]
     PaymentMethodConfig,
+    #[sea_orm(has_many = "super::service_fees::Entity")]
+    ServiceFees,
     #[sea_orm(has_many = "super::transactions::Entity")]
     Transactions,
 }
@@ -41,6 +43,12 @@ impl Related<super::accounts::Entity> for Entity {
 impl Related<super::payment_method_config::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::PaymentMethodConfig.def()
+    }
+}
+
+impl Related<super::service_fees::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ServiceFees.def()
     }
 }
 

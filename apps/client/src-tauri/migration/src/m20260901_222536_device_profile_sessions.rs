@@ -1,4 +1,4 @@
-use crate::create_unique_indexes;
+use crate::{DeviceProfileSessions, IndexConfig, Profiles, create_indexes};
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -63,14 +63,16 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        create_unique_indexes!(
+        create_indexes(
             manager,
             DeviceProfileSessions::Table,
-            [
-                DeviceProfileSessions::ProfileId =>
-                DeviceProfileSessions::IdxDeviceProfileSessionsProfileId
-            ]
-        );
+            &[IndexConfig::new(
+                DeviceProfileSessions::ProfileId,
+                DeviceProfileSessions::IdxDeviceProfileSessionsProfileId,
+            )
+            .unique()],
+        )
+        .await?;
 
         Ok(())
     }
@@ -82,22 +84,4 @@ impl MigrationTrait for Migration {
 
         Ok(())
     }
-}
-
-#[derive(Iden)]
-enum DeviceProfileSessions {
-    Table,
-    Id,
-    ProfileId,
-    IsBiometricEnabled,
-    BiometricSessionToken,
-    UpdatedAt,
-    IdxDeviceProfileSessionsProfileId,
-    FkDeviceProfileSessionsProfilesId,
-}
-
-#[derive(Iden)]
-enum Profiles {
-    Table,
-    Id,
 }

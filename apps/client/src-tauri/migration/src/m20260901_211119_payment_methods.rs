@@ -1,4 +1,4 @@
-use crate::create_unique_indexes;
+use crate::{Accounts, IndexConfig, PaymentMethodConfig, PaymentMethods, create_indexes};
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -28,7 +28,8 @@ impl MigrationTrait for Migration {
                         ColumnDef::new(PaymentMethods::Type)
                             .text()
                             .not_null()
-                            .default("CASH_PAYMENT"),
+                            .default("CASH_PAYMENT")
+                            .comment("DEBIT_CARD, CREDIT_CARD, TRANSFER, CASH_PAYMENT"),
                     )
                     .col(
                         ColumnDef::new(PaymentMethods::CardNumberLast4)
@@ -60,14 +61,15 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        create_unique_indexes!(
+        create_indexes(
             manager,
             PaymentMethods::Table,
-            [
-                PaymentMethods::AccountId =>
-                PaymentMethods::IdxPaymentMethodsAccountId
-            ]
-        );
+            &[IndexConfig::new(
+                PaymentMethods::AccountId,
+                PaymentMethods::IdxPaymentMethodsAccountId,
+            )],
+        )
+        .await?;
 
         manager
             .create_table(
@@ -91,12 +93,17 @@ impl MigrationTrait for Migration {
                             .null(),
                     )
                     .col(
-                        ColumnDef::new(PaymentMethodConfig::InterestRate)
+                        ColumnDef::new(PaymentMethodConfig::AnnualEffectiveRate)
                             .text()
                             .null(),
                     )
                     .col(
                         ColumnDef::new(PaymentMethodConfig::BillingCycleDay)
+                            .integer()
+                            .null(),
+                    )
+                    .col(
+                        ColumnDef::new(PaymentMethodConfig::PaymentDueDateDay)
                             .integer()
                             .null(),
                     )
@@ -118,14 +125,16 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        create_unique_indexes!(
+        create_indexes(
             manager,
             PaymentMethodConfig::Table,
-            [
-                PaymentMethodConfig::PaymentMethodId =>
-                PaymentMethodConfig::IdxPaymentMethodConfigPaymentMethodId
-            ]
-        );
+            &[IndexConfig::new(
+                PaymentMethodConfig::PaymentMethodId,
+                PaymentMethodConfig::IdxPaymentMethodConfigPaymentMethodId,
+            )
+            .unique()],
+        )
+        .await?;
 
         Ok(())
     }
@@ -141,36 +150,4 @@ impl MigrationTrait for Migration {
 
         Ok(())
     }
-}
-
-#[derive(Iden)]
-enum PaymentMethods {
-    Table,
-    Id,
-    AccountId,
-    Type,
-    CardNumberLast4,
-    CardHolder,
-    IsActive,
-    CreatedAt,
-    FkPaymentMethodsAccountId,
-    IdxPaymentMethodsAccountId,
-}
-
-#[derive(Iden)]
-enum PaymentMethodConfig {
-    Table,
-    Id,
-    PaymentMethodId,
-    CreditLimit,
-    InterestRate,
-    BillingCycleDay,
-    FkPaymentMethodsConfigPaymentMethodId,
-    IdxPaymentMethodConfigPaymentMethodId,
-}
-
-#[derive(Iden)]
-enum Accounts {
-    Table,
-    Id,
 }

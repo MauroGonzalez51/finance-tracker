@@ -1,4 +1,4 @@
-use crate::create_indexes;
+use crate::{IndexConfig, Profiles, create_indexes};
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -24,11 +24,15 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        create_indexes!(
+        create_indexes(
             manager,
             Profiles::Table,
-            [Profiles::Email => Profiles::IdxProfilesEmail]
-        );
+            &[IndexConfig::new(
+                Profiles::Email,
+                Profiles::IdxProfilesEmail,
+            )],
+        )
+        .await?;
 
         Ok(())
     }
@@ -40,13 +44,4 @@ impl MigrationTrait for Migration {
 
         Ok(())
     }
-}
-
-#[derive(Iden)]
-enum Profiles {
-    Table,
-    Id,
-    Name,
-    Email,
-    IdxProfilesEmail,
 }

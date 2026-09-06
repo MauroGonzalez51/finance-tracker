@@ -1,4 +1,4 @@
-use crate::create_indexes;
+use crate::{Categories, IndexConfig, Profiles, create_indexes};
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -45,14 +45,15 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        create_indexes!(
+        create_indexes(
             manager,
             Categories::Table,
-            [
-                Categories::ProfileId => Categories::IdxCategoriesProfileId,
-                Categories::ParentId => Categories::IdxCategoriesParentId
-            ]
-        );
+            &[
+                IndexConfig::new(Categories::ProfileId, Categories::IdxCategoriesProfileId),
+                IndexConfig::new(Categories::ParentId, Categories::IdxCategoriesParentId),
+            ],
+        )
+        .await?;
 
         manager
             .create_index(
@@ -77,25 +78,4 @@ impl MigrationTrait for Migration {
 
         Ok(())
     }
-}
-
-#[derive(Iden)]
-enum Categories {
-    Table,
-    Id,
-    ProfileId,
-    Code,
-    Name,
-    ParentId,
-    IdxCategoriesProfileId,
-    IdxCategoriesParentId,
-    IdxCategoriesUniqueProfileName,
-    FkCategoriesProfileId,
-    FkCategoriesParentId,
-}
-
-#[derive(Iden)]
-enum Profiles {
-    Table,
-    Id,
 }

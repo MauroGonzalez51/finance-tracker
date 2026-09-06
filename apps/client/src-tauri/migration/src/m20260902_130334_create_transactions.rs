@@ -1,4 +1,7 @@
-use crate::create_indexes;
+use crate::{
+    Accounts, Categories, CreditTransactionDetails, IndexConfig, PaymentMethods, Profiles,
+    Transactions, create_indexes,
+};
 use sea_orm_migration::prelude::*;
 
 pub struct Migration;
@@ -23,14 +26,53 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Transactions::AccountId).uuid().null())
-                    .col(ColumnDef::new(Transactions::PaymentMethodId).uuid().null())
+                    .col(ColumnDef::new(Transactions::ProfileId).uuid().not_null())
                     .col(ColumnDef::new(Transactions::CategoryId).uuid().null())
-                    .col(ColumnDef::new(Transactions::Type).text().not_null())
+                    .col(ColumnDef::new(Transactions::SourceAccountId).uuid().null())
+                    .col(
+                        ColumnDef::new(Transactions::SourcePaymentMethodId)
+                            .uuid()
+                            .null(),
+                    )
+                    .col(
+                        ColumnDef::new(Transactions::DestinationAccountId)
+                            .uuid()
+                            .null(),
+                    )
+                    .col(
+                        ColumnDef::new(Transactions::Type)
+                            .string()
+                            .not_null()
+                            .comment("EXPENSE, INCOME, TRANSFER, LOAN_PAYMENT"),
+                    )
+                    .col(
+                        ColumnDef::new(Transactions::Status)
+                            .string()
+                            .not_null()
+                            .default("COMPLETED")
+                            .comment("PENDING, COMPLETED, VOIDED"),
+                    )
                     .col(ColumnDef::new(Transactions::Amount).text().not_null())
+                    .col(
+                        ColumnDef::new(Transactions::FeeAmount)
+                            .text()
+                            .not_null()
+                            .default("0.00"),
+                    )
+                    .col(
+                        ColumnDef::new(Transactions::CurrencyCode)
+                            .string_len(3)
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(Transactions::ExchangeRate)
+                            .text()
+                            .not_null()
+                            .default("1.00"),
+                    )
                     .col(ColumnDef::new(Transactions::Notes).text().null())
                     .col(
-                        ColumnDef::new(Transactions::Date)
+                        ColumnDef::new(Transactions::TransactionDate)
                             .date_time()
                             .not_null()
                             .default(Expr::cust("CURRENT_TIMESTAMP")),
@@ -43,18 +85,10 @@ impl MigrationTrait for Migration {
                     )
                     .foreign_key(
                         ForeignKey::create()
-                            .name(Transactions::FkTransactionsAccountId.to_string())
-                            .from(Transactions::Table, Transactions::AccountId)
-                            .to(Accounts::Table, Accounts::Id)
-                            .on_delete(ForeignKeyAction::SetNull)
-                            .on_update(ForeignKeyAction::Cascade),
-                    )
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name(Transactions::FkTransactionsPaymentMethodId.to_string())
-                            .from(Transactions::Table, Transactions::PaymentMethodId)
-                            .to(PaymentMethods::Table, PaymentMethods::Id)
-                            .on_delete(ForeignKeyAction::SetNull)
+                            .name(Transactions::FkTransactionsProfileId.to_string())
+                            .from(Transactions::Table, Transactions::ProfileId)
+                            .to(Profiles::Table, Profiles::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
@@ -65,60 +99,93 @@ impl MigrationTrait for Migration {
                             .on_delete(ForeignKeyAction::SetNull)
                             .on_update(ForeignKeyAction::Cascade),
                     )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(Transactions::FkTransactionsSourceAccountId.to_string())
+                            .from(Transactions::Table, Transactions::SourceAccountId)
+                            .to(Accounts::Table, Accounts::Id)
+                            .on_delete(ForeignKeyAction::SetNull)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(Transactions::FkTransactionsSourcePaymentMethodId.to_string())
+                            .from(Transactions::Table, Transactions::SourcePaymentMethodId)
+                            .to(PaymentMethods::Table, PaymentMethods::Id)
+                            .on_delete(ForeignKeyAction::SetNull)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name(Transactions::FkTransactionsDestinationAccountId.to_string())
+                            .from(Transactions::Table, Transactions::DestinationAccountId)
+                            .to(Accounts::Table, Accounts::Id)
+                            .on_delete(ForeignKeyAction::SetNull)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
                     .to_owned(),
             )
             .await?;
 
-        create_indexes!(
+        create_indexes(
             manager,
             Transactions::Table,
-            [
-                    Transactions::AccountId =>
-                    Transactions::IdxTransactionsAccountId,
-                    Transactions::PaymentMethodId =>
-                    Transactions::IdxTransactionsPaymentMethodId,
-                    Transactions::CategoryId =>
-                    Transactions::IdxTransactionsCategoryId
-            ]
-        );
+            &[
+                IndexConfig::new(
+                    Transactions::ProfileId,
+                    Transactions::IdxTransactionsProfileId,
+                ),
+                IndexConfig::new(
+                    Transactions::SourceAccountId,
+                    Transactions::IdxTransactionsSourceAccountId,
+                ),
+                IndexConfig::new(
+                    Transactions::DestinationAccountId,
+                    Transactions::IdxTransactionsDestinationAccountId,
+                ),
+                IndexConfig::new(
+                    Transactions::CategoryId,
+                    Transactions::IdxTransactionsCategoryId,
+                ),
+            ],
+        )
+        .await?;
 
         manager
             .create_table(
                 Table::create()
-                    .table(TransactionConfig::Table)
+                    .table(CreditTransactionDetails::Table)
                     .if_not_exists()
                     .col(
-                        ColumnDef::new(TransactionConfig::Id)
+                        ColumnDef::new(CreditTransactionDetails::Id)
                             .uuid()
                             .not_null()
                             .primary_key(),
                     )
                     .col(
-                        ColumnDef::new(TransactionConfig::TransactionId)
+                        ColumnDef::new(CreditTransactionDetails::TransactionId)
                             .uuid()
                             .not_null(),
                     )
                     .col(
-                        ColumnDef::new(TransactionConfig::Installments)
+                        ColumnDef::new(CreditTransactionDetails::InstallmentsCount)
                             .integer()
                             .not_null()
                             .default(1),
                     )
-                    .col(ColumnDef::new(TransactionConfig::CreditLimit).text().null())
                     .col(
-                        ColumnDef::new(TransactionConfig::InterestRate)
+                        ColumnDef::new(CreditTransactionDetails::AnnualEffectiveRate)
                             .text()
-                            .null(),
-                    )
-                    .col(
-                        ColumnDef::new(TransactionConfig::BillingCycleDay)
-                            .integer()
-                            .null(),
+                            .not_null()
+                            .default("0.00"),
                     )
                     .foreign_key(
                         ForeignKey::create()
-                            .name(TransactionConfig::FkTransactionConfigTransactionId.to_string())
-                            .from(TransactionConfig::Table, TransactionConfig::TransactionId)
+                            .name(CreditTransactionDetails::FkCreditTxDetailsTxId.to_string())
+                            .from(
+                                CreditTransactionDetails::Table,
+                                CreditTransactionDetails::TransactionId,
+                            )
                             .to(Transactions::Table, Transactions::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
@@ -127,78 +194,33 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        create_indexes!(
+        create_indexes(
             manager,
-            TransactionConfig::Table,
-            [
-                TransactionConfig::TransactionId =>
-                TransactionConfig::IdxTransactionConfigTransactionId
-            ]
-        );
+            CreditTransactionDetails::Table,
+            &[IndexConfig::new(
+                CreditTransactionDetails::TransactionId,
+                CreditTransactionDetails::IdxCreditTxDetailsTxId,
+            )
+            .unique()],
+        )
+        .await?;
 
         Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Transactions::Table).to_owned())
+            .drop_table(
+                Table::drop()
+                    .table(CreditTransactionDetails::Table)
+                    .to_owned(),
+            )
             .await?;
 
         manager
-            .drop_table(Table::drop().table(TransactionConfig::Table).to_owned())
+            .drop_table(Table::drop().table(Transactions::Table).to_owned())
             .await?;
 
         Ok(())
     }
-}
-
-#[derive(Iden)]
-enum Transactions {
-    Table,
-    Id,
-    AccountId,
-    PaymentMethodId,
-    CategoryId,
-    Type,
-    Amount,
-    Notes,
-    Date,
-    CreatedAt,
-    IdxTransactionsAccountId,
-    IdxTransactionsPaymentMethodId,
-    IdxTransactionsCategoryId,
-    FkTransactionsAccountId,
-    FkTransactionsPaymentMethodId,
-    FkTransactionsCategoryId,
-}
-
-#[derive(Iden)]
-enum TransactionConfig {
-    Table,
-    Id,
-    TransactionId,
-    Installments,
-    CreditLimit,
-    InterestRate,
-    BillingCycleDay,
-    IdxTransactionConfigTransactionId,
-    FkTransactionConfigTransactionId,
-}
-
-#[derive(Iden)]
-enum Accounts {
-    Table,
-    Id,
-}
-
-#[derive(Iden)]
-enum PaymentMethods {
-    Table,
-    Id,
-}
-
-#[derive(Iden)]
-enum Categories {
-    Table,
-    Id,
 }

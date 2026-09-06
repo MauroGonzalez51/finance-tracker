@@ -17,6 +17,8 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
+    #[sea_orm(has_many = "super::loans::Entity")]
+    Loans,
     #[sea_orm(has_many = "super::payment_methods::Entity")]
     PaymentMethods,
     #[sea_orm(
@@ -27,8 +29,14 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Profiles,
-    #[sea_orm(has_many = "super::transactions::Entity")]
-    Transactions,
+    #[sea_orm(has_many = "super::service_fees::Entity")]
+    ServiceFees,
+}
+
+impl Related<super::loans::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Loans.def()
+    }
 }
 
 impl Related<super::payment_methods::Entity> for Entity {
@@ -43,9 +51,9 @@ impl Related<super::profiles::Entity> for Entity {
     }
 }
 
-impl Related<super::transactions::Entity> for Entity {
+impl Related<super::service_fees::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Transactions.def()
+        Relation::ServiceFees.def()
     }
 }
 

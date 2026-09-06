@@ -2,9 +2,18 @@
 
 pub use super::accounts::Entity as Accounts;
 pub use super::categories::Entity as Categories;
+pub use super::credit_transaction_details::Entity as CreditTransactionDetails;
 pub use super::device_profile_sessions::Entity as DeviceProfileSessions;
+pub use super::loan_payments::Entity as LoanPayments;
+pub use super::loan_schedule_custom::Entity as LoanScheduleCustom;
+pub use super::loan_schedule_daily::Entity as LoanScheduleDaily;
+pub use super::loan_schedule_periodic::Entity as LoanSchedulePeriodic;
+pub use super::loan_schedule_weekly::Entity as LoanScheduleWeekly;
+pub use super::loans::Entity as Loans;
 pub use super::payment_method_config::Entity as PaymentMethodConfig;
 pub use super::payment_methods::Entity as PaymentMethods;
 pub use super::profiles::Entity as Profiles;
-pub use super::transaction_config::Entity as TransactionConfig;
+pub use super::service_fee_fixed::Entity as ServiceFeeFixed;
+pub use super::service_fee_percentage::Entity as ServiceFeePercentage;
+pub use super::service_fees::Entity as ServiceFees;
 pub use super::transactions::Entity as Transactions;

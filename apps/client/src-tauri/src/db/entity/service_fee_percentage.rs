@@ -3,35 +3,35 @@
 use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
-#[sea_orm(table_name = "payment_method_config")]
+#[sea_orm(table_name = "service_fee_percentage")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
     #[sea_orm(unique)]
-    pub payment_method_id: Uuid,
+    pub service_fee_id: Uuid,
+    #[sea_orm(column_type = "Text")]
+    pub percentage: String,
     #[sea_orm(column_type = "Text", nullable)]
-    pub credit_limit: Option<String>,
+    pub min_amount: Option<String>,
     #[sea_orm(column_type = "Text", nullable)]
-    pub annual_effective_rate: Option<String>,
-    pub billing_cycle_day: Option<i64>,
-    pub payment_due_date_day: Option<i64>,
+    pub max_amount: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::payment_methods::Entity",
-        from = "Column::PaymentMethodId",
-        to = "super::payment_methods::Column::Id",
+        belongs_to = "super::service_fees::Entity",
+        from = "Column::ServiceFeeId",
+        to = "super::service_fees::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
-    PaymentMethods,
+    ServiceFees,
 }
 
-impl Related<super::payment_methods::Entity> for Entity {
+impl Related<super::service_fees::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::PaymentMethods.def()
+        Relation::ServiceFees.def()
     }
 }
 
