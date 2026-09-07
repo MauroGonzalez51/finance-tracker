@@ -38,6 +38,8 @@ sea-orm = { version = "2.0.2", features = [
     "with-chrono",
 ] }
 sea-orm-migration = "2.0.2"
+tauri-plugin-os = "2"
+keyring = { version = "4.2.0", features = ["v1", "cli"] }
 
 [target.'cfg(any(target_os = "android", target_os = "ios"))'.dependencies]
 tauri-plugin-biometric = "2"

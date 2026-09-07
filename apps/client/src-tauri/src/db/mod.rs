@@ -2,7 +2,24 @@ pub mod entity;
 
 use anyhow::Context;
 use migration::{Migrator, MigratorTrait};
-use sea_orm::{Database, DatabaseConnection};
+use sea_orm::{ConnectionTrait, Database, DatabaseConnection};
+
+fn get_encryption_key() -> anyhow::Result<String> {
+    let entry = keyring::Entry::new("FinanceTracker", "DB_ENCRYPTION_KEY")
+        .context("failed to create keyring entry")?;
+
+    match entry.get_password() {
+        Ok(key) => Ok(key),
+        Err(_) => {
+            let key = uuid::Uuid::new_v4().to_string();
+            entry
+                .set_password(&key)
+                .context("failed to save key to keyring")?;
+
+            Ok(key)
+        }
+    }
+}
 
 fn get_connection_url() -> anyhow::Result<String> {
     if let Ok(url) = std::env::var("DATABASE_URL") {
@@ -28,6 +45,12 @@ fn get_connection_url() -> anyhow::Result<String> {
 pub async fn init() -> anyhow::Result<DatabaseConnection> {
     let url = get_connection_url().context("failed to get database url")?;
     let connection = Database::connect(&url).await?;
+
+    let encryption_key = get_encryption_key()?;
+
+    connection
+        .execute_unprepared(&format!("PRAGMA key = '{}';", encryption_key))
+        .await?;
 
     Migrator::up(&connection, None).await?;
 
