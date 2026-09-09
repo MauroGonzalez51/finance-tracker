@@ -27,6 +27,7 @@ rust_decimal = "1.42.1"
 uuid = { version = "1.26.0", features = ["v4"] }
 
 migration = { path = "migration" }
+i18n = { path = "i18n" }
 
 sea-orm = { version = "2.0.2", features = [
     "sqlx-sqlite",

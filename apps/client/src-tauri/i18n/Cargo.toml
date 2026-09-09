@@ -1,0 +1,10 @@
+[package]
+name = "i18n"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "i18n"
+path = "src/lib.rs"
+
+[dependencies]

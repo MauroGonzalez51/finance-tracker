@@ -9,6 +9,10 @@
             "path": "../apps/client",
         },
         {
+            "name": "# Tauri",
+            "path": "../apps/client/src-tauri",
+        },
+        {
             "name": "# Server",
             "path": "../apps/server",
         },
