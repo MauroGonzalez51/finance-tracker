@@ -1,3 +1,8 @@
 [workspace]
-members = ["apps/client/src-tauri", "apps/client/src-tauri/migration"]
+members = [
+    "apps/client/src-tauri",
+    "apps/client/src-tauri/migration",
+    "apps/client/src-tauri/i18n",
+    "apps/client/src-tauri/i18n/i18n-macros",
+]
 resolver = "3"

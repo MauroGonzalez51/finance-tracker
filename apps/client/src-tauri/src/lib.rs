@@ -1,4 +1,5 @@
 use anyhow::Context;
+use i18n::I18nState;
 use tauri::{Manager, WindowEvent};
 
 mod db;
@@ -13,6 +14,9 @@ pub fn run() {
             #[cfg(mobile)]
             app.handle()
                 .plugin(tauri_plugin_biometric::Builder::new().build());
+
+            let i18n_state = I18nState::default();
+            app.manage(i18n_state);
 
             app.handle().plugin(tauri_plugin_notification::init())?;
 
