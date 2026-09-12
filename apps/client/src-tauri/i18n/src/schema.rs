@@ -1,63 +1,74 @@
 use crate::loader::{Locale, LocaleLoader};
 use anyhow::Context;
 use i18n_macros::i18n_schema;
+use std::sync::{Arc, Mutex};
 
 i18n_schema! {
     pub struct Schema {
         pub tray: struct Tray {
             pub menu: struct TrayMenu {
-                pub show: String,
-                pub hide: String,
+                pub quit: String,
             }
         }
     }
 }
 
 pub struct I18nState {
-    pub current_locale: Locale,
-    pub loader: LocaleLoader,
+    current: Mutex<(Locale, Arc<Schema>)>,
+    loader: Mutex<LocaleLoader>,
 }
 
 impl Default for I18nState {
     fn default() -> Self {
-        Self {
-            current_locale: Locale::EN,
-            loader: LocaleLoader::new(),
-        }
+        Self::new(Locale::EN).expect("failed to load default locale")
     }
 }
 
 impl I18nState {
-    pub fn new() -> anyhow::Result<Self> {
+    pub fn new(locale: Locale) -> anyhow::Result<Self> {
         let mut loader = LocaleLoader::new();
-        loader.load_locale(Locale::EN)?;
+        loader.load(locale)?;
+
+        let schema = loader
+            .get(locale)
+            .with_context(|| format!("failed to load {} locale", locale))?
+            .clone();
 
         Ok(Self {
-            current_locale: Locale::EN,
-            loader,
+            current: Mutex::new((Locale::EN, schema)),
+            loader: Mutex::new(loader),
         })
     }
 
-    pub fn current(&mut self) -> anyhow::Result<&Schema> {
-        let locale = self
-            .loader
-            .get_locale(self.current_locale)
-            .with_context(|| format!("failed to load locale: {}", self.current_locale))?
-            .ok_or_else(|| anyhow::anyhow!("locale not found: {}", self.current_locale))?;
+    pub fn current(&self) -> Arc<Schema> {
+        let (_, schema) = &*self.current.lock().unwrap();
+        schema.clone()
+    }
 
-        Ok(&locale.data)
+    pub fn locale(&self) -> Locale {
+        let (locale, _) = *self.current.lock().unwrap();
+        locale
+    }
+
+    pub fn schema(&mut self, locale: Locale) -> anyhow::Result<Arc<Schema>> {
+        let mut loader = self.loader.lock().unwrap();
+        loader.load(locale)?;
+        loader
+            .get(locale)
+            .with_context(|| format!("failed to load {} locale", locale))
     }
 
     pub fn set_locale(&mut self, locale: Locale) -> anyhow::Result<()> {
-        self.loader.load_locale(locale)?;
-        self.current_locale = locale;
-        self.loader.unload_all_except(locale);
+        let mut loader = self.loader.lock().unwrap();
+
+        loader.load(locale)?;
+
+        let new_schema = loader.get(locale).context("failed to get locale")?;
+        loader.keep_only(locale);
+
+        let mut current = self.current.lock().unwrap();
+        *current = (locale, new_schema);
 
         Ok(())
-    }
-
-    pub fn get_schema(&mut self, locale: Locale) -> anyhow::Result<&Schema> {
-        let locale_data = self.loader.get_locale(locale)?;
-        Ok(&locale_data.data)
     }
 }

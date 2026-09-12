@@ -33,7 +33,7 @@ fn get_connection_url() -> anyhow::Result<String> {
     std::fs::create_dir_all(data_dir)
         .with_context(|| format!("failed to create directory: {}", data_dir.display()))?;
 
-    let db_path = data_dir.join("dev.db");
+    let db_path = data_dir.join("database.db");
     if !db_path.exists() {
         std::fs::File::create(&db_path)
             .with_context(|| format!("failed to create file: {}", db_path.display()))?;

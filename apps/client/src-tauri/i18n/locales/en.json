@@ -1,8 +1,7 @@
 {
     "tray": {
         "menu": {
-            "show": "Show",
-            "hide": "Hide"
+            "quit": "Close"
         }
     }
 }

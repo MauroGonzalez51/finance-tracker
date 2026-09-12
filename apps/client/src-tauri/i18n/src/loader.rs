@@ -1,6 +1,6 @@
 use crate::schema::Schema;
 use anyhow::Context;
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Arc};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Locale {
@@ -41,15 +41,9 @@ impl Locale {
     }
 }
 
-#[derive(Debug)]
-pub struct LocaleData {
-    pub locale: Locale,
-    pub data: Schema,
-}
-
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct LocaleLoader {
-    locales: HashMap<Locale, LocaleData>,
+    cache: HashMap<Locale, Arc<Schema>>,
 }
 
 impl LocaleLoader {
@@ -57,36 +51,32 @@ impl LocaleLoader {
         Self::default()
     }
 
-    pub fn load_locale(&mut self, locale: Locale) -> anyhow::Result<()> {
-        if self.locales.contains_key(&locale) {
+    pub fn load(&mut self, locale: Locale) -> anyhow::Result<()> {
+        if self.cache.contains_key(&locale) {
             return Ok(());
         }
 
         let content = locale.bundled_json();
-        let data = serde_json::from_str::<Schema>(content)
-            .context(format!("failed to parse {:?} locale", locale))?;
+        let schema = serde_json::from_str::<Schema>(content)
+            .with_context(|| format!("failed to parse {} locale", locale))?;
 
-        self.locales.insert(locale, LocaleData { locale, data });
-
+        self.cache.insert(locale, Arc::new(schema));
         Ok(())
     }
 
-    // Dont like this api, result and option doesn't make sense here D:
-    pub fn get_locale(&mut self, locale: Locale) -> anyhow::Result<Option<&LocaleData>> {
-        if self.locales.contains_key(&locale) {
-            return Ok(self.locales.get(&locale));
-        }
-
-        self.load_locale(locale)
-            .with_context(|| format!("failed to load locale: {}", locale))?;
-        Ok(self.locales.get(&locale))
+    pub fn get(&self, locale: Locale) -> Option<Arc<Schema>> {
+        self.cache.get(&locale).cloned()
     }
 
-    pub fn unload_locale(&mut self, locale: Locale) {
-        self.locales.remove(&locale);
+    pub fn unload(&mut self, locale: Locale) {
+        self.cache.remove(&locale);
     }
 
-    pub fn unload_all_except(&mut self, keep: Locale) {
-        self.locales.retain(|k, _| *k == keep);
+    pub fn keep_only(&mut self, locale: Locale) {
+        self.cache.retain(|k, _| *k == locale);
+    }
+
+    pub fn loaded(&self) -> Vec<Locale> {
+        self.cache.keys().copied().collect()
     }
 }

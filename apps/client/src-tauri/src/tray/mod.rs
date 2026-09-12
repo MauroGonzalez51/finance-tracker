@@ -1,20 +1,19 @@
 use anyhow::Context;
+use i18n::I18nState;
 use tauri::{
     menu::{Menu, MenuItem},
-    tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
-    AppHandle, Manager,
+    tray::TrayIconBuilder,
+    AppHandle, Manager, Wry,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum MenuAction {
-    Show,
     Quit,
 }
 
 impl AsRef<str> for MenuAction {
     fn as_ref(&self) -> &str {
         match self {
-            MenuAction::Show => "show",
             MenuAction::Quit => "quit",
         }
     }
@@ -25,29 +24,28 @@ impl TryFrom<&str> for MenuAction {
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value {
-            "show" => Ok(MenuAction::Show),
             "quit" => Ok(MenuAction::Quit),
             _ => Err(()),
         }
     }
 }
 
-fn show_main_window(app: &AppHandle) {
-    if let Some(window) = app.get_webview_window("main") {
-        let _ = window.show();
-        let _ = window.unminimize();
-        let _ = window.set_focus();
-    }
+fn build_menu(app: &AppHandle) -> anyhow::Result<Menu<Wry>> {
+    let i18n = app.state::<I18nState>();
+
+    let quit = MenuItem::with_id(
+        app,
+        MenuAction::Quit.as_ref(),
+        &i18n.current().tray.menu.quit,
+        true,
+        None::<&str>,
+    )?;
+
+    Ok(Menu::with_items(app, &[&quit])?)
 }
 
 pub fn setup(app: &AppHandle) -> anyhow::Result<()> {
-    let menu = Menu::with_items(
-        app,
-        &[
-            &MenuItem::with_id(app, MenuAction::Show.as_ref(), "Show", true, None::<&str>)?,
-            &MenuItem::with_id(app, MenuAction::Quit.as_ref(), "Quit", true, None::<&str>)?,
-        ],
-    )?;
+    let menu = build_menu(app)?;
 
     TrayIconBuilder::new()
         .icon(
@@ -60,19 +58,8 @@ pub fn setup(app: &AppHandle) -> anyhow::Result<()> {
         .on_menu_event(|app, event| {
             if let Ok(action) = MenuAction::try_from(event.id.as_ref()) {
                 match action {
-                    MenuAction::Show => show_main_window(app),
                     MenuAction::Quit => app.exit(0),
                 }
-            }
-        })
-        .on_tray_icon_event(|tray, event| {
-            if let TrayIconEvent::Click {
-                button: MouseButton::Left,
-                button_state: MouseButtonState::Up,
-                ..
-            } = event
-            {
-                show_main_window(tray.app_handle());
             }
         })
         .build(app)?;

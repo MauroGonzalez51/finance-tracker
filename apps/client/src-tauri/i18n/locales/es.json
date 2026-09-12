@@ -1,8 +1,7 @@
 {
     "tray": {
         "menu": {
-            "show": "Mostrar",
-            "hide": "Ocultar"
+            "quit": "Cerrar"
         }
     }
 }

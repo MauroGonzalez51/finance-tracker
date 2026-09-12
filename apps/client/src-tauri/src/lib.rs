@@ -15,8 +15,7 @@ pub fn run() {
             app.handle()
                 .plugin(tauri_plugin_biometric::Builder::new().build());
 
-            let i18n_state = I18nState::default();
-            app.manage(i18n_state);
+            app.manage(I18nState::default());
 
             app.handle().plugin(tauri_plugin_notification::init())?;
 
