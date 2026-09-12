@@ -43,18 +43,24 @@ tasks:
             DATABASE_URL: sqlite://database.db?mode=rwc
 
     cargo:
-        command: scripts/cargo.sh
+        command: scripts/change-directory.sh
+        args:
+            - apps/client/src-tauri
+            - cargo
         options:
             cache: false
-            runFromWorkspaceRoot: false
+            runFromWorkspaceRoot: true
 
     sea-orm:
-        command: scripts/sea-orm.sh
+        command: scripts/change-directory.sh
+        args:
+            - apps/client/src-tauri
+            - sea-orm-cli
         env:
             DATABASE_URL: sqlite://database.db?mode=rwc
         options:
             cache: false
-            runFromWorkspaceRoot: false
+            runFromWorkspaceRoot: true
 
     generate-entities:
         extends: sea-orm
